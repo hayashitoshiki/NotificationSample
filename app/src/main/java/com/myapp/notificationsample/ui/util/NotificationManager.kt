@@ -14,9 +14,11 @@ import com.myapp.notificationsample.R
 class NotificationManager {
 
     companion object {
-        const val NOTIFICATION_ID = 0
         const val CHANNEL_ID = "primary_notification_channel"
-        const val CHANNEL_NAME = "Stand up notification"
+        enum class CHANNELS(val channelName: String, val title: String, val notificationId: Int) {
+            CHANNEL1("Stand up notification","show Notification",1),
+            CHANNEL2("second notification","count up", 2)
+        }
     }
 
     private lateinit var notificationManager: NotificationManager
@@ -25,36 +27,36 @@ class NotificationManager {
     // 通知表示
     fun show(context: Context) {
         notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotificationChannel()
-        showNotification("show Notification", context)
+        createNotificationChannel(CHANNELS.CHANNEL1)
+        showNotification(CHANNELS.CHANNEL1,"show Notification", context)
     }
 
     // カウントアップ
     fun showCountUp(context: Context, count: String) {
         notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotificationChannel()
-        showNotification(count, context)
+        createNotificationChannel(CHANNELS.CHANNEL2)
+        showNotification(CHANNELS.CHANNEL2, count, context)
     }
 
 
     // 通し設定　＆　通知表示
-    private fun showNotification(title: String, context: Context) {
+    private fun showNotification(channel: CHANNELS, title: String, context: Context) {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             // アイコン
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             // タイトル
-            .setContentTitle(title)
+            .setContentTitle(channel.title)
             // 本文テキスト
             .setContentText(title)
             // 通知の優先度
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
+        notificationManager.notify(channel.notificationId, builder.build())
     }
 
     // チャンネル登録
-    private fun createNotificationChannel() {
+    private fun createNotificationChannel(channel: CHANNELS) {
         // チャネル作成
-        val notificationChannel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH).also {
+        val notificationChannel = NotificationChannel(CHANNEL_ID, channel.channelName, NotificationManager.IMPORTANCE_HIGH).also {
             it.enableLights(true)
             it.lightColor = Color.RED
             it.enableVibration(true)
