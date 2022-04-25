@@ -9,9 +9,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.myapp.notificationsample.ui.util.NotificationManager
 import com.myapp.notificationsample.ui.viewmodel.HomeViewModel
 
 @Composable
@@ -38,6 +38,19 @@ fun HomeScreen(viewModel: HomeViewModel) {
                 modifier = Modifier.padding(top = 64.dp)
             ) {
                 Text(text = "Show Notification(count up)")
+            }
+
+            Button(
+                onClick = { NotificationManager.CHANNELS.CHANNEL1.showSettingView(context) },
+                modifier = Modifier.padding(top = 64.dp)
+            ) {
+                Text(text = "show_sampleの設定画面表示")
+            }
+            Button(
+                onClick = { NotificationManager.CHANNELS.CHANNEL2.showSettingView(context) },
+                modifier = Modifier.padding(top = 64.dp)
+            ) {
+                Text(text = "count upの設定画面表示")
             }
         }
     }

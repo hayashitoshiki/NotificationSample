@@ -1,10 +1,11 @@
 package com.myapp.notificationsample.ui.util
 
 import android.app.NotificationChannel
-import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import com.myapp.notificationsample.R
 
@@ -21,6 +22,7 @@ class NotificationManager {
         var notificationId = 0
     }
 
+
     /**
      * 通知の種類
      *
@@ -31,7 +33,21 @@ class NotificationManager {
      */
     enum class CHANNELS(val id: String, val channelName: String, val title: String, val explanation: String) {
         CHANNEL1("show_sample", "Stand up notification","show Notification", "通知サンプル"),
-        CHANNEL2("count_up", "second notification","count up", "カウントアップに関する通知")
+        CHANNEL2("count_up", "second notification","count up", "カウントアップに関する通知");
+
+
+        /**
+         * 指定した通知の設定画面表示
+         *
+         * @param context コンテキスト
+         */
+        fun showSettingView(context: Context) {
+            val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).also {
+                it.putExtra(Settings.EXTRA_CHANNEL_ID, this.id)
+                it.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            }
+            context.startActivity(intent)
+        }
     }
 
     private lateinit var notificationManager: NotificationManager
@@ -52,7 +68,7 @@ class NotificationManager {
     }
 
 
-    // 通し設定　＆　通知表示
+    // 通知設定　＆　通知表示
     private fun showNotification(channel: CHANNELS, message: String, context: Context) {
         val builder = NotificationCompat.Builder(context, channel.id)
             // アイコン
